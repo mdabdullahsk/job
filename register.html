@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Register Page</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<style>
+  /* তোমার আগের CSS ঠিক রাখলাম */
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+  body { background-color:#d3d3d3; }
+  header { width:100%; background:white; display:flex; align-items:center; padding:10px 20px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+  header img { height:40px; width:auto; }
+  .container { background:#fff; border-radius:15px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:100%; max-width:420px; padding:30px 25px 40px; margin:30px auto; transition:all 0.3s ease; }
+  h2 { text-align:center; margin-bottom:20px; }
+  form { display:flex; flex-direction:column; gap:15px; }
+  .input-group { position:relative; width:100%; }
+  .input-group input, .input-group select { width:100%; padding:12px 15px 12px 45px; border-radius:10px; border:1px solid #ccc; font-size:16px; outline:none; box-sizing:border-box; }
+  .input-group .icon { position:absolute; top:50%; left:12px; transform:translateY(-50%); color:#555; font-size:18px; }
+  .phone-input { display:flex; gap:5px; }
+  .phone-input select { flex:0 0 110px; border-top-right-radius:0; border-bottom-right-radius:0; border-right:none; }
+  .phone-input input { flex:1; border-top-left-radius:0; border-bottom-left-radius:0; }
+  button { background-color:#e60000; color:#fff; font-size:20px; font-weight:bold; padding:12px 0; border:none; border-radius:25px; cursor:pointer; box-shadow:0 5px 10px rgba(230,0,0,0.5); transition: background-color 0.3s ease; }
+  button:hover { background-color:#b30000; }
+  .login-text { margin-top:15px; text-align:center; }
+  .login-text a { color:blue; text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="your-logo.png" alt="Logo" />
+</header>
+
+<div class="container">
+  <h2>Register</h2>
+  <form id="registerForm">
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-user"></i></span>
+      <input type="text" placeholder="Full Name" name="fullname" required />
+    </div>
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+      <input type="email" placeholder="Email" name="email" required />
+    </div>
+
+    <div class="input-group phone-input" style="padding-left:45px;">
+      <span class="icon"><i class="fa-solid fa-phone"></i></span>
+      <select name="countryCode" required>
+        <option value="+93">🇦🇫 +93</option>
+        <option value="+355">🇦🇱 +355</option>
+        <option value="+213">🇩🇿 +213</option>
+      </select>
+      <input type="tel" name="phoneNumber" placeholder="Enter mobile number" required pattern="[0-9]{7,15}" />
+    </div>
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-globe"></i></span>
+      <select name="country" required>
+        <option>Albania</option>
+        <option>Algeria</option>
+        <option>Andorra</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-city"></i></span>
+      <input type="text" placeholder="City" name="city" required />
+    </div>
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-location-dot"></i></span>
+      <input type="text" placeholder="ZIP Code" name="zip" required />
+    </div>
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-lock"></i></span>
+      <input type="password" placeholder="Password" name="password" required />
+    </div>
+
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-lock"></i></span>
+      <input type="password" placeholder="Confirm Password" name="confirmPassword" required />
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <p class="login-text">
+    Already have an account? <a href="login.html">Login</a>
+  </p>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAvcVuf7Cv-bSDZA5UHvSej69AhjJWc93s",
+  authDomain: "fire-fox-83e12.firebaseapp.com",
+  projectId: "fire-fox-83e12",
+  storageBucket: "fire-fox-83e12.appspot.com",
+  messagingSenderId: "262028687961",
+  appId: "1:262028687961:web:28325733cd68a920dc4f48"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const form = document.getElementById('registerForm');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const fullname = form.fullname.value.trim();
+  const email = form.email.value.trim();
+  const password = form.password.value;
+  const confirmPassword = form.confirmPassword.value;
+
+  if (password !== confirmPassword) {
+    alert("Password does not match!");
+    return;
+  }
+
+  const countryCode = form.countryCode.value;
+  const phoneNumber = form.phoneNumber.value.trim();
+  if (!/^\d{7,15}$/.test(phoneNumber)) {
+    alert("Invalid phone number!");
+    return;
+  }
+  const fullPhone = countryCode + phoneNumber;
+
+  const country = form.country.value;
+  const city = form.city.value.trim();
+  const zip = form.zip.value.trim();
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Save extra info to Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      fullname: fullname,
+      email: email,
+      phone: fullPhone,
+      country: country,
+      city: city,
+      zip: zip,
+      createdAt: serverTimestamp()
+    });
+
+    alert("Registration Successful!");
+    window.location.href = "home.html"; // redirect
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADS View – Sidebar with Icons</title>
+  <style>
+    :root{
+      --header-h: 78px;
+      --sidebar-w: 200px;
+      --sidebar-w-collapsed: 60px;
+      --stage-bg: #dbdbdb;
+      --chip-bg: #9a9a9a;
+      --chip-text: #fff;
+      --divider: #ececec;
+      --ink: #111;
+      --transition-speed: 0.3s;
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html,body{ height:100%; font-family:sans-serif; }
+
+    .topbar{
+      height:var(--header-h);
+      display:flex; align-items:center; gap:16px;
+      padding:0 20px; border-bottom:1px solid var(--divider);
+      background:#fff;
+    }
+    .logo-img{ height:50px; width:auto; }
+    .toggle-btn{
+      background:none; border:none; cursor:pointer; padding:8px; font-size:18px; font-weight:bold;
+    }
+
+    .app{ display:flex; height:calc(100vh - var(--header-h)); }
+
+    .sidebar{
+      width:var(--sidebar-w); background:#f7f7f7; border-right:1px solid var(--divider);
+      transition:width var(--transition-speed) ease;
+      overflow:hidden;
+    }
+    .sidebar.collapsed{ width:var(--sidebar-w-collapsed); }
+
+    .menu{ display:flex; flex-direction:column; gap:6px; padding:10px; }
+    .chip{
+      display:flex; align-items:center; gap:10px;
+      text-decoration:none; user-select:none;
+      background:var(--chip-bg); color:var(--chip-text);
+      font-size:14px; font-weight:600; text-transform:uppercase; line-height:1.2;
+      padding:8px 10px; border-radius:4px;
+      transition:background 0.2s, padding 0.3s;
+      white-space:nowrap;
+    }
+    .chip:hover{ background:#7f7f7f; }
+    .sidebar.collapsed .chip span{ display:none; }
+
+    .icon{
+      width:20px; height:20px; flex-shrink:0; fill:white;
+    }
+
+    .stage{ flex:1; background:var(--stage-bg); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button class="toggle-btn" id="menuToggle">☰</button>
+    <img src="logo.png" alt="Logo" class="logo-img">
+  </header>
+
+  <main class="app">
+    <aside class="sidebar" id="sidebar">
+      <nav class="menu" aria-label="Works">
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>
+          <span>WORK 1</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          <span>WORK 2</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 4H4v16h16V8h-8z"/></svg>
+          <span>WORK 3</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-3.58 9.74-9 12-5.42-2.26-9-7-9-12V6z"/></svg>
+          <span>WORK 4</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6l9 6 9-6v12H3z"/></svg>
+          <span>WORK 5</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/></svg>
+          <span>WORK 6</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+          <span>WORK 7</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l1.41 1.41L7.83 11H20v2H7.83l5.58 5.59L12 20l-8-8z"/></svg>
+          <span>WORK 8</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+          <span>WORK 9</span>
+        </a>
+        <a class="chip" href="#">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 7h18v2H3zm0 7h18v2H3z"/></svg>
+          <span>WORK 10</span>
+        </a>
+      </nav>
+    </aside>
+    <section class="stage"></section>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
+  </script>
+</body>
+</html>

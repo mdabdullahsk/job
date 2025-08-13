@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Login Page</title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background-color: #d3d3d3; }
+header { width: 100%; background: white; display: flex; align-items: center; padding: 10px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+header img { height: 40px; width: auto; }
+.container { background: #fff; border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 100%; max-width: 380px; padding: 30px 25px 40px; text-align: center; margin: 50px auto; }
+.logo { width: 100px; height: 100px; margin: 0 auto 25px; border-radius: 50%; background: #c9dcf7; display: flex; justify-content: center; align-items: center; box-shadow: 5px 5px 10px #a8b9d5, -5px -5px 10px #e3f0ff; }
+.logo img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+form { display: flex; flex-direction: column; gap: 15px; }
+.input-group { position: relative; width: 100%; }
+.input-group input { width: 100%; padding: 12px 15px 12px 45px; border-radius: 10px; border: 1px solid #ccc; font-size: 16px; outline: none; }
+.input-group .icon { position: absolute; top: 50%; left: 12px; transform: translateY(-50%); color: #555; font-size: 18px; }
+.input-group .toggle-password { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); cursor: pointer; color: #555; font-size: 18px; }
+button { background-color: #e60000; color: #fff; font-size: 22px; font-weight: bold; padding: 12px 0; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 5px 10px rgba(230, 0, 0, 0.5); }
+.register-text { margin-top: 15px; font-size: 15px; }
+.register-text a { color: blue; text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <img src="your-logo.png" alt="Logo">
+</header>
+
+<div class="container">
+  <div class="logo">
+    <img src="user-avatar.png" alt="User Avatar">
+  </div>
+
+  <form id="loginForm">
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-user"></i></span>
+      <input type="email" id="email" placeholder="EMAIL:" required />
+    </div>
+    <div class="input-group">
+      <span class="icon"><i class="fa-solid fa-lock"></i></span>
+      <input type="password" id="password" placeholder="PASSWORD:" required />
+      <span class="toggle-password" id="togglePassword"><i class="fa-solid fa-eye-slash"></i></span>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+
+  <p class="register-text">
+    Don't have an account? <a href="register.html">Register.</a>
+  </p>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAvcVuf7Cv-bSDZA5UHvSej69AhjJWc93s",
+  authDomain: "fire-fox-83e12.firebaseapp.com",
+  projectId: "fire-fox-83e12",
+  storageBucket: "fire-fox-83e12.appspot.com",
+  messagingSenderId: "262028687961",
+  appId: "1:262028687961:web:28325733cd68a920dc4f48"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Password toggle
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+togglePassword.addEventListener('click', () => {
+  const type = passwordInput.type === 'password' ? 'text' : 'password';
+  passwordInput.type = type;
+  togglePassword.innerHTML = type === 'password'
+    ? '<i class="fa-solid fa-eye-slash"></i>'
+    : '<i class="fa-solid fa-eye"></i>';
+});
+
+// Login Form Submit
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    window.location.href = "home.html"; // লগইন সফল হলে home.html ওপেন
+  } catch (error) {
+    alert("Login Failed: " + error.message);
+  }
+});
+</script>
+</body>
+</html>
